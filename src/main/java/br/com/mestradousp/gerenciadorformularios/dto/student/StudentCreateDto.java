@@ -1,31 +1,28 @@
-package br.com.mestradousp.gerenciadorformularios.model;
+package br.com.mestradousp.gerenciadorformularios.dto.student;
 
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
-import br.com.mestradousp.gerenciadorformularios.enums.PerformanceReportStatus;
 import br.com.mestradousp.gerenciadorformularios.enums.Programs;
 import br.com.mestradousp.gerenciadorformularios.enums.StudentStatus;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
-@Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "students")
-public class Student {
-    @Id
+@AllArgsConstructor
+
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class StudentCreateDto {
+    @NotBlank
     @Size(min = 8, max = 8)
     private String uspNumber;
 
@@ -66,14 +63,7 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private LoginStatus loginStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
-    private Professor professor;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "exam_id", referencedColumnName = "id")
-    private Exam exam;
-
-    @OneToMany(mappedBy = "student")
-    List<PerformanceReport> performanceReports;
+    @NotBlank
+    @Size(min = 8, max = 8)
+    private String professorUspNumber;
 }
