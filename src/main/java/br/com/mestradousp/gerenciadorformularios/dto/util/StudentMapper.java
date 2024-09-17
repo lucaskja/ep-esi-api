@@ -2,6 +2,7 @@ package br.com.mestradousp.gerenciadorformularios.dto.util;
 
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentCreateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseDto;
+import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.model.Student;
 
@@ -58,9 +59,18 @@ public abstract class StudentMapper {
                 model.getRegistrationDate(),
                 model.getStatus(),
                 model.getLoginStatus(),
-                model.getProfessor(),
+                ProfessorMapper.toResponseDto(model.getProfessor()),
                 model.getExam(),
                 model.getPerformanceReports()
+        );
+    };
+
+    public static StudentResponseUpdateDto toResponseUpdateDto(Student model) {
+        return new StudentResponseUpdateDto(
+                model.getUspNumber(),
+                model.getName(),
+                model.getProfessor(),
+                model.getLoginStatus()
         );
     };
 }

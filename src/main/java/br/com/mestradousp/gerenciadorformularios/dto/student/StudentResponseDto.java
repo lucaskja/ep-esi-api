@@ -1,5 +1,6 @@
 package br.com.mestradousp.gerenciadorformularios.dto.student;
 
+import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorResponseDto;
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
 import br.com.mestradousp.gerenciadorformularios.enums.Programs;
 import br.com.mestradousp.gerenciadorformularios.enums.StudentStatus;
@@ -39,7 +40,7 @@ public class StudentResponseDto {
 
     private LoginStatus loginStatus;
 
-    private Professor professor;
+    private ProfessorResponseDto professor;
 
     private Exam exam;
 
