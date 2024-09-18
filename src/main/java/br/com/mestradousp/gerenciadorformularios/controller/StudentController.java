@@ -2,8 +2,12 @@ package br.com.mestradousp.gerenciadorformularios.controller;
 
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentCreateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseDto;
+import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
+import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
+import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.service.ProfessorService;
 import br.com.mestradousp.gerenciadorformularios.service.StudentService;
+import br.com.mestradousp.gerenciadorformularios.utils.EntityValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +30,6 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<StudentResponseDto> createStudent(@RequestBody @Valid StudentCreateDto dto) {
-        studentService.validateIfStudentIsAlreadyCreated(dto.getUspNumber());
-        professorService.validateIfProfessorExists(dto.getProfessorUspNumber());
-
         return ResponseEntity.ok(this.studentService.createStudent(dto));
     }
 }

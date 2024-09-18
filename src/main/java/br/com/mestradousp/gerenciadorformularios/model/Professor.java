@@ -1,6 +1,7 @@
 package br.com.mestradousp.gerenciadorformularios.model;
 
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ public class Professor {
     @Enumerated(EnumType.STRING)
     private LoginStatus loginStatus;
 
+    @JsonIgnoreProperties("professor")
     @OneToMany(mappedBy = "professor")
     private Set<Student> students;
 

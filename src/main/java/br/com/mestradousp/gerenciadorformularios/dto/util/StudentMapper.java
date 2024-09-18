@@ -6,6 +6,8 @@ import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseUpda
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.model.Student;
 
+import java.util.List;
+
 public abstract class StudentMapper {
     public static Student toModel(StudentCreateDto dto, Professor professor) {
         return new Student(
@@ -65,11 +67,32 @@ public abstract class StudentMapper {
         );
     };
 
+    public static List<StudentResponseDto> toResponseDto(List<Student> models) {
+        return models.stream()
+                .map(student -> new StudentResponseDto(
+                    student.getName(),
+                    student.getEmail(),
+                    student.getDob(),
+                    student.getDocumentNumber(),
+                    student.getBirthPlace(),
+                    student.getNationality(),
+                    student.getProgram(),
+                    student.getLattes(),
+                    student.getRegistrationDate(),
+                    student.getStatus(),
+                    student.getLoginStatus(),
+                    ProfessorMapper.toResponseDto(student.getProfessor()),
+                    student.getExam(),
+                    student.getPerformanceReports())
+                )
+                .toList();
+    };
+
     public static StudentResponseUpdateDto toResponseUpdateDto(Student model) {
         return new StudentResponseUpdateDto(
                 model.getUspNumber(),
                 model.getName(),
-                model.getProfessor(),
+                ProfessorMapper.toResponseDto(model.getProfessor()),
                 model.getLoginStatus()
         );
     };

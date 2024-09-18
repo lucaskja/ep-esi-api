@@ -10,8 +10,12 @@ import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.model.Student;
 import br.com.mestradousp.gerenciadorformularios.repository.StudentRepository;
+import br.com.mestradousp.gerenciadorformularios.utils.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -28,24 +32,29 @@ public class StudentService {
         this.professorService = professorService;
     }
 
-    public Student findStudentById(String id) {
-        return this.studentRepository.findById(id).orElse(null);
-    }
-
-    public void validateIfStudentExists(String id) {
-        this.studentRepository.findById(id).orElseThrow(() -> new NotFoundException("Student not found"));
-    }
-
-    public void validateIfStudentIsAlreadyCreated(String id) {
-        this.studentRepository.findById(id).ifPresent(a -> { throw new ConflictException("User already exists"); });
+    public void validateIfStudentAlreadyCreated(String uspNumber) {
+        new EntityValidator<>(
+                studentRepository,
+                () -> new NotFoundException("Student not found"),
+                () -> new ConflictException("Student already exists")
+        ).validateIfEntityAlreadyCreated(uspNumber);
     }
 
     public StudentResponseDto createStudent(StudentCreateDto studentDto) {
-        Professor advisor = professorService.findProfessorById(studentDto.getProfessorUspNumber());
+        this.validateIfStudentAlreadyCreated(studentDto.getUspNumber());
+        Professor advisor = professorService.validateIfProfessorExists(studentDto.getProfessorUspNumber());
 
         Student studentToSave = StudentMapper.toModel(studentDto, advisor);
 
         return StudentMapper.toResponseDto(studentRepository.save(studentToSave));
+    }
+
+    public Optional<Student> findStudentById(String id) {
+        return this.studentRepository.findById(id);
+    }
+
+    public List<StudentResponseDto> getAllPendingStudents(LoginStatus status) {
+        return StudentMapper.toResponseDto(this.studentRepository.findAllByLoginStatusEquals(status));
     }
 
     public StudentResponseUpdateDto updateLogin(Student student, LoginStatus status) {

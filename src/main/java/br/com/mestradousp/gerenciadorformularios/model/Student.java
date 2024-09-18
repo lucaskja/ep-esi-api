@@ -4,6 +4,7 @@ import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
 import br.com.mestradousp.gerenciadorformularios.enums.PerformanceReportStatus;
 import br.com.mestradousp.gerenciadorformularios.enums.Programs;
 import br.com.mestradousp.gerenciadorformularios.enums.StudentStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -66,6 +67,7 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private LoginStatus loginStatus;
 
+    @JsonIgnoreProperties("students")
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
