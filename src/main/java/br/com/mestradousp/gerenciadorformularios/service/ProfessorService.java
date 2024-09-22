@@ -1,7 +1,5 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
-import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorResponseUpdateDto;
-import br.com.mestradousp.gerenciadorformularios.dto.util.ProfessorMapper;
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
@@ -20,7 +18,7 @@ public class ProfessorService {
         this.professorRepository = professorRepository;
     }
 
-    public Professor validateIfProfessorExists(String professorUspNumber) {
+    public Professor validateProfessor(String professorUspNumber) {
         return new EntityValidator<>(
                 professorRepository,
                 () -> new NotFoundException("Professor not found"),
@@ -32,9 +30,8 @@ public class ProfessorService {
         return this.professorRepository.findById(id);
     }
 
-    public ProfessorResponseUpdateDto updateLogin(Professor professor, LoginStatus status) {
+    public void updateLogin(Professor professor, LoginStatus status) {
         professor.setLoginStatus(status);
-
-        return ProfessorMapper.toResponseUpdateDto(this.professorRepository.save(professor));
+        this.professorRepository.save(professor);
     }
 }

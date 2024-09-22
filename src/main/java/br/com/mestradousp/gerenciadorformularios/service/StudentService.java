@@ -32,7 +32,7 @@ public class StudentService {
         this.professorService = professorService;
     }
 
-    public void validateIfStudentAlreadyCreated(String uspNumber) {
+    public void validateIfStudentIsAlreadyCreated(String uspNumber) {
         new EntityValidator<>(
                 studentRepository,
                 () -> new NotFoundException("Student not found"),
@@ -40,9 +40,17 @@ public class StudentService {
         ).validateIfEntityAlreadyCreated(uspNumber);
     }
 
+    public Student validateIfStudentExists(String uspNumber) {
+        return new EntityValidator<>(
+                studentRepository,
+                () -> new NotFoundException("Student not found"),
+                () -> new ConflictException("Student already exists")
+        ).validateIfEntityExists(uspNumber);
+    }
+
     public StudentResponseDto createStudent(StudentCreateDto studentDto) {
-        this.validateIfStudentAlreadyCreated(studentDto.getUspNumber());
-        Professor advisor = professorService.validateIfProfessorExists(studentDto.getProfessorUspNumber());
+        this.validateIfStudentIsAlreadyCreated(studentDto.uspNumber());
+        Professor advisor = professorService.validateProfessor(studentDto.professorUspNumber());
 
         Student studentToSave = StudentMapper.toModel(studentDto, advisor);
 
@@ -57,9 +65,14 @@ public class StudentService {
         return StudentMapper.toResponseDto(this.studentRepository.findAllByLoginStatusEquals(status));
     }
 
-    public StudentResponseUpdateDto updateLogin(Student student, LoginStatus status) {
+    public void updateLogin(Student student, LoginStatus status) {
         student.setLoginStatus(status);
+        this.studentRepository.save(student);
+    }
 
-        return StudentMapper.toResponseUpdateDto(this.studentRepository.save(student));
+    public void updateStudent(Student student) {
+        this.validateIfStudentExists(student.getUspNumber());
+
+        this.studentRepository.save(student);
     }
 }

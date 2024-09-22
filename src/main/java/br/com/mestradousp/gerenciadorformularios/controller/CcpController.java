@@ -1,7 +1,8 @@
 package br.com.mestradousp.gerenciadorformularios.controller;
 
-import br.com.mestradousp.gerenciadorformularios.dto.UserResponseUpdateDto;
+import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorResponseUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseDto;
+import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.user.UpdateUserDto;
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
 import br.com.mestradousp.gerenciadorformularios.service.CcpService;
@@ -21,13 +22,18 @@ public class CcpController {
         this.ccpService = ccpService;
     }
 
-    @PostMapping("/user/update")
-    public ResponseEntity<UserResponseUpdateDto> updateUserLogin(@RequestBody UpdateUserDto dto) {
-        return ResponseEntity.ok(this.ccpService.updateUserLogin(dto));
-    }
-
     @GetMapping("/user/student/status/{status}")
     public ResponseEntity<List<StudentResponseDto>> getAllPendingStudents(@PathVariable LoginStatus status) {
         return ResponseEntity.ok(this.ccpService.getAllPendingStudents(status));
+    }
+
+    @PatchMapping("/user/student/update")
+    public ResponseEntity<StudentResponseUpdateDto> updateStudentLogin(@RequestBody UpdateUserDto dto) {
+        return ResponseEntity.ok(this.ccpService.updateStudentLogin(dto));
+    }
+
+    @PatchMapping("/user/professor/update")
+    public ResponseEntity<ProfessorResponseUpdateDto> updateProfessorLogin(@RequestBody UpdateUserDto dto) {
+        return ResponseEntity.ok(this.ccpService.updateProfessorLogin(dto));
     }
 }

@@ -10,60 +10,53 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@NoArgsConstructor
-@AllArgsConstructor
-
-@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StudentCreateDto {
+public record StudentCreateDto (
     @NotBlank
     @Size(min = 8, max = 8)
-    private String uspNumber;
+    String uspNumber,
 
     @NotBlank
-    private String name;
+    String name,
 
     @NotBlank
     @Email
-    private String email;
+    String email,
 
     @NotNull
-    private LocalDate dob;
+    LocalDate dob,
 
     @NotBlank
-    private String documentNumber;
+    String documentNumber,
 
     @NotBlank
-    private String birthPlace;
+    String birthPlace,
 
     @NotBlank
-    private String nationality;
+    String nationality,
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Programs program;
+    Programs program,
 
     @NotBlank
-    private String lattes;
+    String lattes,
 
     @NotNull
-    private LocalDate registrationDate;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private StudentStatus status;
+    LocalDate registrationDate,
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private LoginStatus loginStatus;
+    StudentStatus status,
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    LoginStatus loginStatus,
 
     @NotBlank
     @Size(min = 8, max = 8)
-    private String professorUspNumber;
-}
+    String professorUspNumber
+) {}

@@ -4,14 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum PerformanceReportStatus {
-    SEND("send"),
-    PROFESSOR_ANALYZING("professorAnalyzing"),
-    CCP_ANALYZING("ccpAnalyzing"),
-    REVISED("revised");
-
-    private final String status;
-
-    private PerformanceReportStatus(String status) {
-        this.status = status;
-    }
+    PROFESSOR_ANALYZING,
+    CCP_ANALYZING,
+    REVISED;
 }

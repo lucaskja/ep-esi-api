@@ -11,18 +11,18 @@ import java.util.List;
 public abstract class StudentMapper {
     public static Student toModel(StudentCreateDto dto, Professor professor) {
         return new Student(
-                dto.getUspNumber(),
-                dto.getName(),
-                dto.getEmail(),
-                dto.getDob(),
-                dto.getDocumentNumber(),
-                dto.getBirthPlace(),
-                dto.getNationality(),
-                dto.getProgram(),
-                dto.getLattes(),
-                dto.getRegistrationDate(),
-                dto.getStatus(),
-                dto.getLoginStatus(),
+                dto.uspNumber(),
+                dto.name(),
+                dto.email(),
+                dto.dob(),
+                dto.documentNumber(),
+                dto.birthPlace(),
+                dto.nationality(),
+                dto.program(),
+                dto.lattes(),
+                dto.registrationDate(),
+                dto.status(),
+                dto.loginStatus(),
                 professor,
                 null,
                 null
@@ -31,17 +31,17 @@ public abstract class StudentMapper {
     public static Student toModel(StudentResponseDto dto, Professor professor) {
         return new Student(
                 null,
-                dto.getName(),
-                dto.getEmail(),
-                dto.getDob(),
-                dto.getDocumentNumber(),
-                dto.getBirthPlace(),
-                dto.getNationality(),
-                dto.getProgram(),
-                dto.getLattes(),
-                dto.getRegistrationDate(),
-                dto.getStatus(),
-                dto.getLoginStatus(),
+                dto.name(),
+                dto.email(),
+                dto.dob(),
+                dto.documentNumber(),
+                dto.birthPlace(),
+                dto.nationality(),
+                dto.program(),
+                dto.lattes(),
+                dto.registrationDate(),
+                dto.status(),
+                dto.loginStatus(),
                 professor,
                 null,
                 null
@@ -86,6 +86,24 @@ public abstract class StudentMapper {
                     student.getPerformanceReports())
                 )
                 .toList();
+    };
+
+    public static StudentCreateDto toCreateDto(Student model) {
+        return new StudentCreateDto(
+                model.getUspNumber(),
+                model.getName(),
+                model.getEmail(),
+                model.getDob(),
+                model.getDocumentNumber(),
+                model.getBirthPlace(),
+                model.getNationality(),
+                model.getProgram(),
+                model.getLattes(),
+                model.getRegistrationDate(),
+                model.getStatus(),
+                model.getLoginStatus(),
+                model.getProfessor().getUspNumber()
+        );
     };
 
     public static StudentResponseUpdateDto toResponseUpdateDto(Student model) {

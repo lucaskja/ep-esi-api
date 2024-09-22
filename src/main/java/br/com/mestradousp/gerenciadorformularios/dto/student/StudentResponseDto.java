@@ -14,35 +14,19 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class StudentResponseDto {
-    private String name;
-
-    private String email;
-
-    private LocalDate dob;
-
-    private String documentNumber;
-
-    private String birthPlace;
-
-    private String nationality;
-
-    private Programs program;
-
-    private String lattes;
-
-    private LocalDate registrationDate;
-
-    private StudentStatus status;
-
-    private LoginStatus loginStatus;
-
-    private ProfessorResponseDto professor;
-
-    private Exam exam;
-
-    List<PerformanceReport> performanceReports;
-}
+public record StudentResponseDto(
+        String name,
+        String email,
+        LocalDate dob,
+        String documentNumber,
+        String birthPlace,
+        String nationality,
+        Programs program,
+        String lattes,
+        LocalDate registrationDate,
+        StudentStatus status,
+        LoginStatus loginStatus,
+        ProfessorResponseDto professor,
+        Exam exam,
+        List<PerformanceReport> performanceReports
+) {}

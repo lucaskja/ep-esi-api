@@ -1,6 +1,5 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
-import br.com.mestradousp.gerenciadorformularios.dto.UserResponseUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorResponseUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseUpdateDto;
@@ -27,29 +26,34 @@ public class CcpService {
         this.professorService = professorService;
     }
 
-    public UserResponseUpdateDto updateUserLogin(UpdateUserDto dto) {
-        Optional<Professor> professorOptional = professorService.findProfessorById(dto.getUspNumber());
+    public ProfessorResponseUpdateDto updateProfessorLogin(UpdateUserDto dto) {
+        Optional<Professor> professorOptional = professorService.findProfessorById(dto.uspNumber());
 
         if (professorOptional.isPresent()) {
             Professor professor = professorOptional.get();
-            professorService.updateLogin(professor, dto.getStatus());
-            return new ProfessorResponseUpdateDto(professor.getUspNumber(), professor.getName(), dto.getStatus());
+            professorService.updateLogin(professor, dto.status());
+            return new ProfessorResponseUpdateDto(professor.getUspNumber(), professor.getName(), dto.status());
         }
 
-        Optional<Student> studentOptional = studentService.findStudentById(dto.getUspNumber());
+        throw new NotFoundException("User not found with USP number: " + dto.uspNumber());
+    }
+
+    public StudentResponseUpdateDto updateStudentLogin(UpdateUserDto dto) {
+        Optional<Student> studentOptional = studentService.findStudentById(dto.uspNumber());
 
         if (studentOptional.isPresent()) {
             Student student = studentOptional.get();
-            studentService.updateLogin(student, dto.getStatus());
+            studentService.updateLogin(student, dto.status());
+
             return new StudentResponseUpdateDto(
                     student.getUspNumber(),
                     student.getName(),
                     ProfessorMapper.toResponseDto(student.getProfessor()),
-                    dto.getStatus()
+                    dto.status()
             );
         }
 
-        throw new NotFoundException("User not found with USP number: " + dto.getUspNumber());
+        throw new NotFoundException("User not found with USP number: " + dto.uspNumber());
     }
 
     public List<StudentResponseDto> getAllPendingStudents(LoginStatus status) {
