@@ -1,81 +1,104 @@
 package br.com.mestradousp.gerenciadorformularios.model;
 
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
-import br.com.mestradousp.gerenciadorformularios.enums.PerformanceReportStatus;
-import br.com.mestradousp.gerenciadorformularios.enums.Programs;
-import br.com.mestradousp.gerenciadorformularios.enums.StudentStatus;
+import br.com.mestradousp.gerenciadorformularios.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "students")
-public class Student {
+public class Student implements UserDetails {
     @Id
-    @Size(min = 8, max = 8)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    @Column(unique = true)
     private String uspNumber;
 
     @NotBlank
-    private String name;
-
-    @NotBlank
     @Email
+    @Column(unique = true)
     private String email;
 
-    @NotNull
-    private LocalDate dob;
-
     @NotBlank
-    private String documentNumber;
-
-    @NotBlank
-    private String birthPlace;
-
-    @NotBlank
-    private String nationality;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Programs program;
-
-    @NotBlank
-    private String lattes;
-
-    @NotNull
-    private LocalDate registrationDate;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private StudentStatus status;
+    private String password;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private LoginStatus loginStatus;
+
+    @NotNull
+    private Roles role;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "exam_id", referencedColumnName = "id")
+    private Exam exam;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "article_id", referencedColumnName = "id")
+    private Article article;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_information_id", referencedColumnName = "id")
+    private StudentInformation studentInformation;
 
     @JsonIgnoreProperties("students")
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "exam_id", referencedColumnName = "id")
-    private Exam exam;
-
+    @JsonIgnoreProperties("student")
     @OneToMany(mappedBy = "student")
     List<PerformanceReport> performanceReports;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.loginStatus.toString().equals("APPROVED");
+    }
 }

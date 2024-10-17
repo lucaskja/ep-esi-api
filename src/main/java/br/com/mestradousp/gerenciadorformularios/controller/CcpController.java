@@ -1,39 +1,28 @@
 package br.com.mestradousp.gerenciadorformularios.controller;
 
-import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorResponseUpdateDto;
-import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseDto;
-import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseUpdateDto;
-import br.com.mestradousp.gerenciadorformularios.dto.user.UpdateUserDto;
-import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
+import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorRequestCreateDto;
 import br.com.mestradousp.gerenciadorformularios.service.CcpService;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.mestradousp.gerenciadorformularios.service.ProfessorService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/ccp")
+@RequestMapping("api/ccp")
 public class CcpController {
     private final CcpService ccpService;
+    private final ProfessorService professorService;
 
-    @Autowired
-    public CcpController(CcpService ccpService) {
-        this.ccpService = ccpService;
-    }
+    @PostMapping("/register/professor")
+    public ResponseEntity<Void> createProfessor(@RequestBody @Valid ProfessorRequestCreateDto dto) {
+        this.professorService.createProfessor(dto);
 
-    @GetMapping("/user/student/status/{status}")
-    public ResponseEntity<List<StudentResponseDto>> getAllPendingStudents(@PathVariable LoginStatus status) {
-        return ResponseEntity.ok(this.ccpService.getAllPendingStudents(status));
-    }
-
-    @PatchMapping("/user/student/update")
-    public ResponseEntity<StudentResponseUpdateDto> updateStudentLogin(@RequestBody UpdateUserDto dto) {
-        return ResponseEntity.ok(this.ccpService.updateStudentLogin(dto));
-    }
-
-    @PatchMapping("/user/professor/update")
-    public ResponseEntity<ProfessorResponseUpdateDto> updateProfessorLogin(@RequestBody UpdateUserDto dto) {
-        return ResponseEntity.ok(this.ccpService.updateProfessorLogin(dto));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

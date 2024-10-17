@@ -1,7 +1,6 @@
 package br.com.mestradousp.gerenciadorformularios.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,20 +22,13 @@ public class Exam {
 
     private LocalDate qualificationExamDate;
 
-    private LocalDate proficientExamDate;
-
-    @NotNull
-    private LocalDate finalAssigmentDeadline;
-
     @NotNull
     private LocalDate qualificationExamDeadline;
 
-    @Min(0)
-    private Integer writingArticles;
+    private LocalDate languageProficiencyExamDate;
 
-    @Min(0)
-    private Integer reviewingArticles;
+    private LocalDate languageProficiencyDeadline;
 
-    @Min(0)
-    private Integer approvedArticles;
+    @NotNull
+    private LocalDate assigmentDeadline;
 }

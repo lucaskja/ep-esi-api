@@ -1,37 +1,41 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
-import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
+import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorRequestCreateDto;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
-import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.repository.ProfessorRepository;
-import br.com.mestradousp.gerenciadorformularios.utils.EntityValidator;
+import br.com.mestradousp.gerenciadorformularios.util.PasswordEncoder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class ProfessorService {
     private final ProfessorRepository professorRepository;
+    private final PasswordEncoder passwordEncoder = new PasswordEncoder();
 
-    public ProfessorService(ProfessorRepository professorRepository) {
-        this.professorRepository = professorRepository;
-    }
-
-    public Professor validateProfessor(String professorUspNumber) {
-        return new EntityValidator<>(
-                professorRepository,
-                () -> new NotFoundException("Professor not found"),
-                () -> new ConflictException("Professor already exists")
-        ).validateIfEntityExists(professorUspNumber);
-    }
-
-    public Optional<Professor> findProfessorById(String id) {
+    public Optional<Professor> findProfessorById(Long id) {
         return this.professorRepository.findById(id);
     }
 
-    public void updateLogin(Professor professor, LoginStatus status) {
-        professor.setLoginStatus(status);
-        this.professorRepository.save(professor);
+    public Optional<Professor> findByEmail(String email) {
+        return this.professorRepository.findByEmail(email);
+    }
+
+    public void createProfessor(ProfessorRequestCreateDto dto) {
+        this.findByEmail(dto.email()).ifPresent(professor -> {throw new ConflictException("Email already registered");});
+
+        this.professorRepository.save(
+                Professor.builder()
+                        .name(dto.name())
+                        .email(dto.email())
+                        .password(this.passwordEncoder.encode(dto.password()))
+                        .uspNumber(dto.uspNumber())
+                        .role(dto.role())
+                        .build()
+        );
     }
 }

@@ -1,10 +1,6 @@
 package br.com.mestradousp.gerenciadorformularios.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@AllArgsConstructor
-@Data
-public class ExceptionDto {
-    private String message;
+public record ExceptionDto(
+        String message
+) {
 }

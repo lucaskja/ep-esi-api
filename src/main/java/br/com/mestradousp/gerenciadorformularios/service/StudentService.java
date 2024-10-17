@@ -1,78 +1,65 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
-import br.com.mestradousp.gerenciadorformularios.dto.student.StudentCreateDto;
-import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseDto;
-import br.com.mestradousp.gerenciadorformularios.dto.student.StudentResponseUpdateDto;
-import br.com.mestradousp.gerenciadorformularios.dto.util.StudentMapper;
+import br.com.mestradousp.gerenciadorformularios.dto.login.RegisterRequestDto;
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
+import br.com.mestradousp.gerenciadorformularios.enums.Roles;
+import br.com.mestradousp.gerenciadorformularios.enums.StudentStatus;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.model.Student;
+import br.com.mestradousp.gerenciadorformularios.model.StudentInformation;
 import br.com.mestradousp.gerenciadorformularios.repository.StudentRepository;
-import br.com.mestradousp.gerenciadorformularios.utils.EntityValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.mestradousp.gerenciadorformularios.util.PasswordEncoder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StudentService {
     private final StudentRepository studentRepository;
     private final ProfessorService professorService;
+    private final StudentInformationService studentInformationService;
+    private final PasswordEncoder passwordEncoder = new PasswordEncoder();
 
-    @Autowired
-    public StudentService(
-            StudentRepository studentRepository,
-            ProfessorService professorService
+    public void createStudent(RegisterRequestDto dto) {
+        this.findStudentByEmail(dto.email()).ifPresent(student -> {
+            throw new ConflictException("Student already exists");
+        });
 
-    ) {
-        this.studentRepository = studentRepository;
-        this.professorService = professorService;
-    }
+        Professor professor = this.professorService.findProfessorById(dto.professorId())
+                .orElseThrow(() -> new NotFoundException("Professor not found"));
 
-    public void validateIfStudentIsAlreadyCreated(String uspNumber) {
-        new EntityValidator<>(
-                studentRepository,
-                () -> new NotFoundException("Student not found"),
-                () -> new ConflictException("Student already exists")
-        ).validateIfEntityAlreadyCreated(uspNumber);
-    }
+        Student student = Student.builder()
+                .email(dto.email())
+                .password(this.passwordEncoder.encode(dto.password()))
+                .uspNumber(dto.uspNumber())
+                .professor(professor)
+                .loginStatus(LoginStatus.PENDENT)
+                .role(Roles.STUDENT)
+                .build();
 
-    public Student validateIfStudentExists(String uspNumber) {
-        return new EntityValidator<>(
-                studentRepository,
-                () -> new NotFoundException("Student not found"),
-                () -> new ConflictException("Student already exists")
-        ).validateIfEntityExists(uspNumber);
-    }
+        StudentInformation studentInformation = this.studentInformationService
+                .createStudentInformation(StudentInformation.builder()
+                        .name(dto.name())
+                        .dob(dto.dob())
+                        .birthPlace(dto.birthPlace())
+                        .nationality(dto.nationality())
+                        .program(dto.program())
+                        .lattes(dto.lattes())
+                        .status(StudentStatus.ENROLLED)
+                        .build()
+                );
 
-    public StudentResponseDto createStudent(StudentCreateDto studentDto) {
-        this.validateIfStudentIsAlreadyCreated(studentDto.uspNumber());
-        Professor advisor = professorService.validateProfessor(studentDto.professorUspNumber());
-
-        Student studentToSave = StudentMapper.toModel(studentDto, advisor);
-
-        return StudentMapper.toResponseDto(studentRepository.save(studentToSave));
-    }
-
-    public Optional<Student> findStudentById(String id) {
-        return this.studentRepository.findById(id);
-    }
-
-    public List<StudentResponseDto> getAllPendingStudents(LoginStatus status) {
-        return StudentMapper.toResponseDto(this.studentRepository.findAllByLoginStatusEquals(status));
-    }
-
-    public void updateLogin(Student student, LoginStatus status) {
-        student.setLoginStatus(status);
-        this.studentRepository.save(student);
-    }
-
-    public void updateStudent(Student student) {
-        this.validateIfStudentExists(student.getUspNumber());
+        student.setStudentInformation(studentInformation);
 
         this.studentRepository.save(student);
+    }
+
+    public Optional<Student> findStudentByEmail(String email) {
+        return this.studentRepository.findByEmail(email);
     }
 }

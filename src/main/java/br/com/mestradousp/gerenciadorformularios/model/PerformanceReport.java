@@ -1,16 +1,12 @@
 package br.com.mestradousp.gerenciadorformularios.model;
 
-import br.com.mestradousp.gerenciadorformularios.enums.PerformanceReportStatus;
+import br.com.mestradousp.gerenciadorformularios.enums.Opinions;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -24,29 +20,27 @@ public class PerformanceReport {
     private Long id;
 
     @Column(columnDefinition = "TEXT")
-    private String professorText;
+    private String academicEventsResume;
+
+    @Column(columnDefinition = "TEXT")
+    private String researchResume;
+
+    @Column(columnDefinition = "TEXT")
+    private String studentObservation;
 
     @Column(columnDefinition = "TEXT")
     private String professorOpinion;
 
-    @NotBlank
-    @Column(columnDefinition = "TEXT")
-    private String studentText;
-
-    @Column(columnDefinition = "TEXT")
-    private String ccpText;
+    private Opinions professorFinalOpinion;
 
     @Column(columnDefinition = "TEXT")
     private String ccpOpinion;
 
-    @NotNull
-    private PerformanceReportStatus status;
-
-    @CreationTimestamp
-    private LocalDate createdAt;
+    private Opinions ccpFinalOpinion;
 
     private Boolean hasDifficult;
 
+    @JsonIgnoreProperties("performanceReports")
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;

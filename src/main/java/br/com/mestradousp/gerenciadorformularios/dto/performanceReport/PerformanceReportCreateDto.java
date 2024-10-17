@@ -1,6 +1,5 @@
 package br.com.mestradousp.gerenciadorformularios.dto.performanceReport;
 
-import br.com.mestradousp.gerenciadorformularios.enums.PerformanceReportStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,9 +12,6 @@ public record PerformanceReportCreateDto(
 
     @NotBlank
     String studentText,
-
-    @NotNull
-    PerformanceReportStatus status,
 
     @NotNull
     Boolean hasDifficult,

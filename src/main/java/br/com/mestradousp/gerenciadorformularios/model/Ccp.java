@@ -1,19 +1,15 @@
 package br.com.mestradousp.gerenciadorformularios.model;
 
 import br.com.mestradousp.gerenciadorformularios.enums.Roles;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -21,8 +17,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "professors")
-public class Professor implements UserDetails {
+@Table(name = "ccps")
+public class Ccp implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,20 +37,11 @@ public class Professor implements UserDetails {
     @NotBlank
     private String name;
 
-    @NotNull
     private Roles role;
-
-    @JsonIgnoreProperties("professor")
-    @OneToMany(mappedBy = "professor")
-    private Set<Student> students;
-
-    @JsonIgnoreProperties("professor")
-    @OneToMany(mappedBy = "professor")
-    private Set<Course> taughtCourses;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.getRole().name()));
+        return List.of();
     }
 
     @Override

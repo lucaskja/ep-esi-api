@@ -1,6 +1,8 @@
 package br.com.mestradousp.gerenciadorformularios.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +19,16 @@ public class StudentCourse {
     StudentCourseKey id;
 
     @ManyToOne
-    @MapsId("studentUspNumber")
+    @MapsId("studentId")
     @JoinColumn(name = "student_id")
     Student student;
 
     @ManyToOne
-    @MapsId("courseName")
+    @MapsId("courseId")
     @JoinColumn(name = "course_id")
     Course course;
 
+    @NotNull
+    @Min(0)
     private Double grade;
 }
