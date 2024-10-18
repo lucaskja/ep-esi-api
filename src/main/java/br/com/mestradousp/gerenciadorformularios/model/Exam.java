@@ -2,15 +2,13 @@ package br.com.mestradousp.gerenciadorformularios.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -27,6 +25,7 @@ public class Exam {
 
     private LocalDate languageProficiencyExamDate;
 
+    @NotNull
     private LocalDate languageProficiencyDeadline;
 
     @NotNull

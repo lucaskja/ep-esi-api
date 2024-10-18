@@ -3,13 +3,11 @@ package br.com.mestradousp.gerenciadorformularios.model;
 import br.com.mestradousp.gerenciadorformularios.enums.Opinions;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -27,18 +25,6 @@ public class PerformanceReport {
 
     @Column(columnDefinition = "TEXT")
     private String studentObservation;
-
-    @Column(columnDefinition = "TEXT")
-    private String professorOpinion;
-
-    private Opinions professorFinalOpinion;
-
-    @Column(columnDefinition = "TEXT")
-    private String ccpOpinion;
-
-    private Opinions ccpFinalOpinion;
-
-    private Boolean hasDifficult;
 
     @JsonIgnoreProperties("performanceReports")
     @ManyToOne

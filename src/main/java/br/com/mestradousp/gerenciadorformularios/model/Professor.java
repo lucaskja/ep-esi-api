@@ -42,6 +42,7 @@ public class Professor implements UserDetails {
     private String name;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Roles role;
 
     @JsonIgnoreProperties("professor")

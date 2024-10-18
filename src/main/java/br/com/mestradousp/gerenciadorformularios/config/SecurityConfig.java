@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static br.com.mestradousp.gerenciadorformularios.enums.Roles.CCP;
+import static br.com.mestradousp.gerenciadorformularios.enums.Roles.STUDENT;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +33,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/ccp/register/professor").hasRole(CCP.name())
+                        .requestMatchers(HttpMethod.POST, "/api/ccp/**").hasRole(CCP.name())
+                        .requestMatchers(HttpMethod.POST, "api/performance-report/").hasRole(STUDENT.name())
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())

@@ -62,4 +62,21 @@ public class StudentService {
     public Optional<Student> findStudentByEmail(String email) {
         return this.studentRepository.findByEmail(email);
     }
+
+    public Optional<Student> findStudentById(Long id) {
+        return this.studentRepository.findById(id);
+    }
+
+    public void approveStudent(Long id) {
+        Student student = this.studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+
+        student.setLoginStatus(LoginStatus.APPROVED);
+
+        this.studentRepository.save(student);
+    }
+
+    public Student updateStudent(Student student) {
+        return this.studentRepository.save(student);
+    }
 }

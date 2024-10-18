@@ -4,8 +4,10 @@ import br.com.mestradousp.gerenciadorformularios.enums.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -37,11 +39,13 @@ public class Ccp implements UserDetails {
     @NotBlank
     private String name;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private Roles role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.getRole().name()));
     }
 
     @Override

@@ -12,6 +12,7 @@ import br.com.mestradousp.gerenciadorformularios.service.CcpService;
 import br.com.mestradousp.gerenciadorformularios.service.JwtTokenService;
 import br.com.mestradousp.gerenciadorformularios.service.ProfessorService;
 import br.com.mestradousp.gerenciadorformularios.service.StudentService;
+import br.com.mestradousp.gerenciadorformularios.util.PasswordEncoder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,9 +48,7 @@ public class AuthenticationController {
 
         this.studentService.createStudent(dto);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(this.generateToken(new LoginRequestDto(dto.email(), dto.password())));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     private LoginResponseDto generateToken(LoginRequestDto dto) {

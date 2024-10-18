@@ -44,6 +44,7 @@ public class Student implements UserDetails {
     private LoginStatus loginStatus;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Roles role;
 
     @OneToOne(cascade = CascadeType.ALL)
