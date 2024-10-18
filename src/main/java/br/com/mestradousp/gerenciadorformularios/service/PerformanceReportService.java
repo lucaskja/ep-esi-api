@@ -1,9 +1,11 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
+import br.com.mestradousp.gerenciadorformularios.dto.ccp.CcpCreateOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportCreateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportProfessorOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
+import br.com.mestradousp.gerenciadorformularios.model.Ccp;
 import br.com.mestradousp.gerenciadorformularios.model.PerformanceReport;
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.model.Student;
@@ -19,6 +21,7 @@ public class PerformanceReportService {
     private final PerformanceReportRepository performanceReportRepository;
     private final StudentService studentService;
     private final ProfessorService professorService;
+    private final CcpService ccpService;
 
     public void createPerformanceReport(PerformanceReportCreateDto dto) {
         Student student = studentService.findStudentById(dto.studentId())
@@ -44,6 +47,16 @@ public class PerformanceReportService {
 
         performanceReport.setProfessorOpinion(dto.professorOpinion());
         performanceReport.setProfessorFinalOpinion(dto.professorFinalOpinion());
+
+        this.performanceReportRepository.save(performanceReport);
+    }
+
+    public void createCcpOpinion(Long id, CcpCreateOpinionDto dto) {
+        this.ccpService.findCcpById(dto.ccpId()).orElseThrow(() -> new NotFoundException("Ccp not found"));
+        PerformanceReport performanceReport = this.performanceReportRepository.findById(id).orElseThrow(() -> new NotFoundException("Performance Report not found"));
+
+        performanceReport.setCcpOpinion(dto.ccpOpinion());
+        performanceReport.setCcpFinalOpinion(dto.ccpFinalOpinion());
 
         this.performanceReportRepository.save(performanceReport);
     }

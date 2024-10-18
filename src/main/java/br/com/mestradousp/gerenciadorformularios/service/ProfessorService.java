@@ -38,8 +38,4 @@ public class ProfessorService {
                         .build()
         );
     }
-
-    public void reviewStudentPerformanceReview() {
-
-    }
 }
