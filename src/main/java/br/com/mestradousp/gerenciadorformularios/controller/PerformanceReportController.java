@@ -3,6 +3,7 @@ package br.com.mestradousp.gerenciadorformularios.controller;
 import br.com.mestradousp.gerenciadorformularios.dto.article.ArticleUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.exam.ExamUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportCreateDto;
+import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportGetResponseDto;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import br.com.mestradousp.gerenciadorformularios.model.Article;
 import br.com.mestradousp.gerenciadorformularios.model.Exam;
@@ -16,10 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -68,5 +66,10 @@ public class PerformanceReportController {
         this.articleService.updateArticle(student.getArticle());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/student/{id}")
+    public ResponseEntity<List<PerformanceReportGetResponseDto>> getStudentPerformancesReport(@PathVariable Long id) {
+        return ResponseEntity.ok(this.performanceReportService.findStudentPerformancesReport(id));
     }
 }

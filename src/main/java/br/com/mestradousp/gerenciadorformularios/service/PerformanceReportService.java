@@ -2,6 +2,7 @@ package br.com.mestradousp.gerenciadorformularios.service;
 
 import br.com.mestradousp.gerenciadorformularios.dto.ccp.CcpCreateOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportCreateDto;
+import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportGetResponseDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportProfessorOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
@@ -63,5 +64,52 @@ public class PerformanceReportService {
 
     public List<PerformanceReport> findPerformanceReportByStudentId(Long id) {
         return this.performanceReportRepository.findByStudentId(id);
+    }
+
+    public List<PerformanceReportGetResponseDto> findStudentPerformancesReport(Long studentId) {
+        Student student = this.studentService.findStudentById(studentId).orElseThrow(() -> new NotFoundException("Student not found"));
+
+        PerformanceReportGetResponseDto performanceReportGetResponseDto = PerformanceReportGetResponseDto.builder()
+                .professorOpinion(student.getPerformanceReports().getFirst().getProfessorOpinion())
+                .professorFinalOpinion(student.getPerformanceReports().getFirst().getProfessorFinalOpinion())
+                .ccpOpinion(student.getPerformanceReports().getFirst().getCcpOpinion())
+                .ccpFinalOpinion(student.getPerformanceReports().getFirst().getCcpFinalOpinion())
+                .academicEventsResume(student.getPerformanceReports().getFirst().getAcademicEventsResume())
+                .researchResume(student.getPerformanceReports().getFirst().getResearchResume())
+                .studentObservation(student.getPerformanceReports().getFirst().getStudentObservation())
+                .qualificationExamDate(student.getExam().getQualificationExamDate())
+                .qualificationExamDeadline(student.getExam().getQualificationExamDeadline())
+                .languageProficiencyExamDate(student.getExam().getLanguageProficiencyExamDate())
+                .languageProficiencyDeadline(student.getExam().getLanguageProficiencyDeadline())
+                .assigmentDeadline(student.getExam().getAssigmentDeadline())
+                .approvedArticles(student.getArticle().getApprovedArticles())
+                .reviewingArticles(student.getArticle().getReviewingArticles())
+                .writingArticles(student.getArticle().getWritingArticles())
+                .build();
+
+        if (student.getPerformanceReports().size() == 1) {
+            return List.of(performanceReportGetResponseDto);
+        }
+
+        return List.of(
+                performanceReportGetResponseDto,
+                PerformanceReportGetResponseDto.builder()
+                        .professorOpinion(student.getPerformanceReports().get(1).getProfessorOpinion())
+                        .professorFinalOpinion(student.getPerformanceReports().get(1).getProfessorFinalOpinion())
+                        .ccpOpinion(student.getPerformanceReports().get(1).getCcpOpinion())
+                        .ccpFinalOpinion(student.getPerformanceReports().get(1).getCcpFinalOpinion())
+                        .academicEventsResume(student.getPerformanceReports().get(1).getAcademicEventsResume())
+                        .researchResume(student.getPerformanceReports().get(1).getResearchResume())
+                        .studentObservation(student.getPerformanceReports().get(1).getStudentObservation())
+                        .qualificationExamDate(student.getExam().getQualificationExamDate())
+                        .qualificationExamDeadline(student.getExam().getQualificationExamDeadline())
+                        .languageProficiencyExamDate(student.getExam().getLanguageProficiencyExamDate())
+                        .languageProficiencyDeadline(student.getExam().getLanguageProficiencyDeadline())
+                        .assigmentDeadline(student.getExam().getAssigmentDeadline())
+                        .approvedArticles(student.getArticle().getApprovedArticles())
+                        .reviewingArticles(student.getArticle().getReviewingArticles())
+                        .writingArticles(student.getArticle().getWritingArticles())
+                        .build()
+        );
     }
 }
