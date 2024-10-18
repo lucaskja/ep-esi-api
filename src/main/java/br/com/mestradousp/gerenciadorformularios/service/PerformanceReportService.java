@@ -1,8 +1,11 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportCreateDto;
+import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportProfessorOpinionDto;
+import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import br.com.mestradousp.gerenciadorformularios.model.PerformanceReport;
+import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.model.Student;
 import br.com.mestradousp.gerenciadorformularios.repository.PerformanceReportRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import java.util.List;
 public class PerformanceReportService {
     private final PerformanceReportRepository performanceReportRepository;
     private final StudentService studentService;
+    private final ProfessorService professorService;
 
     public void createPerformanceReport(PerformanceReportCreateDto dto) {
         Student student = studentService.findStudentById(dto.studentId())
@@ -28,6 +32,20 @@ public class PerformanceReportService {
                         .student(student)
                         .build()
         );
+    }
+
+    public void createProfessorOpinion(Long id, PerformanceReportProfessorOpinionDto dto) {
+        Professor professor = this.professorService.findProfessorById(dto.professorId()).orElseThrow(() -> new NotFoundException("Professor not found"));
+        PerformanceReport performanceReport = this.performanceReportRepository.findById(id).orElseThrow(() -> new NotFoundException("Performance Report not found"));
+
+        if (!professor.getStudents().contains(performanceReport.getStudent())) {
+            throw new ConflictException("Professor student and performance report student are different");
+        }
+
+        performanceReport.setProfessorOpinion(dto.professorOpinion());
+        performanceReport.setProfessorFinalOpinion(dto.professorFinalOpinion());
+
+        this.performanceReportRepository.save(performanceReport);
     }
 
     public List<PerformanceReport> findPerformanceReportByStudentId(Long id) {

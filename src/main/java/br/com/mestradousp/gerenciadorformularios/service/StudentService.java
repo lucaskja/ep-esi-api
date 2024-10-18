@@ -12,7 +12,6 @@ import br.com.mestradousp.gerenciadorformularios.model.StudentInformation;
 import br.com.mestradousp.gerenciadorformularios.repository.StudentRepository;
 import br.com.mestradousp.gerenciadorformularios.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -76,7 +75,7 @@ public class StudentService {
         this.studentRepository.save(student);
     }
 
-    public Student updateStudent(Student student) {
-        return this.studentRepository.save(student);
+    public void updateStudent(Student student) {
+        this.studentRepository.save(student);
     }
 }

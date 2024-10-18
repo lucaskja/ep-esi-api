@@ -26,6 +26,18 @@ public class PerformanceReport {
     @Column(columnDefinition = "TEXT")
     private String studentObservation;
 
+    @Column(columnDefinition = "TEXT")
+    private String professorOpinion;
+
+    @Enumerated(EnumType.STRING)
+    private Opinions professorFinalOpinion;
+
+    @Column(columnDefinition = "TEXT")
+    private String ccpOpinion;
+
+    @Enumerated(EnumType.STRING)
+    private Opinions ccpFinalOpinion;
+
     @JsonIgnoreProperties("performanceReports")
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
