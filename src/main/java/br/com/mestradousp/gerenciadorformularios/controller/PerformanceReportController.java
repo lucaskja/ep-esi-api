@@ -5,6 +5,7 @@ import br.com.mestradousp.gerenciadorformularios.dto.exam.ExamUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportCreateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportGetResponseDto;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
+import br.com.mestradousp.gerenciadorformularios.exception.BadRequestException;
 import br.com.mestradousp.gerenciadorformularios.model.Article;
 import br.com.mestradousp.gerenciadorformularios.model.Exam;
 import br.com.mestradousp.gerenciadorformularios.model.PerformanceReport;
@@ -14,6 +15,7 @@ import br.com.mestradousp.gerenciadorformularios.service.ExamService;
 import br.com.mestradousp.gerenciadorformularios.service.PerformanceReportService;
 import br.com.mestradousp.gerenciadorformularios.service.StudentService;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +71,21 @@ public class PerformanceReportController {
     }
 
     @GetMapping("/student/{id}")
-    public ResponseEntity<List<PerformanceReportGetResponseDto>> getStudentPerformancesReport(@PathVariable Long id) {
-        return ResponseEntity.ok(this.performanceReportService.findStudentPerformancesReport(id));
+    public ResponseEntity<List<PerformanceReportGetResponseDto>> getStudentPerformancesReport(
+            @PathVariable Long id, Principal principal) {
+
+        // Obter o e-mail do usuário autenticado
+        String authenticatedUserEmail = principal.getName();
+
+        // Verificar se o aluno autenticado corresponde ao aluno do relatório
+        Student student = studentService.findStudentById(id)
+            .orElseThrow(() -> new NotFoundException("Student not found"));
+
+        if (!student.getEmail().equals(authenticatedUserEmail)) {
+            throw new BadRequestException("You are not allowed to view this student's reports");
+        }
+
+        // Buscar relatórios de performance
+        return ResponseEntity.ok(this.performanceReportService.findStudentPerformancesReport(id, authenticatedUserEmail));
     }
 }

@@ -6,7 +6,6 @@ import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.Performan
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportProfessorOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
-import br.com.mestradousp.gerenciadorformularios.model.Ccp;
 import br.com.mestradousp.gerenciadorformularios.model.PerformanceReport;
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.model.Student;
@@ -66,17 +65,31 @@ public class PerformanceReportService {
         return this.performanceReportRepository.findByStudentId(id);
     }
 
-    public List<PerformanceReportGetResponseDto> findStudentPerformancesReport(Long studentId) {
-        Student student = this.studentService.findStudentById(studentId).orElseThrow(() -> new NotFoundException("Student not found"));
-
+    public List<PerformanceReportGetResponseDto> findStudentPerformancesReport(Long Id, String authenticatedEmail) {
+        // Verificar se o aluno existe
+        Student student = this.studentService.findStudentById(Id)
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+    
+        // Verificar se o e-mail do aluno autenticado é o mesmo do aluno solicitado
+        if (!student.getEmail().equals(authenticatedEmail)) {
+            throw new ConflictException("You are not allowed to view this student's reports");
+        }
+    
+        List<PerformanceReport> performanceReports = student.getPerformanceReports();
+    
+        if (performanceReports.isEmpty()) {
+            throw new NotFoundException("No performance reports found for this student");
+        }
+    
+        // Construir o primeiro relatório de performance para o DTO
         PerformanceReportGetResponseDto performanceReportGetResponseDto = PerformanceReportGetResponseDto.builder()
-                .professorOpinion(student.getPerformanceReports().getFirst().getProfessorOpinion())
-                .professorFinalOpinion(student.getPerformanceReports().getFirst().getProfessorFinalOpinion())
-                .ccpOpinion(student.getPerformanceReports().getFirst().getCcpOpinion())
-                .ccpFinalOpinion(student.getPerformanceReports().getFirst().getCcpFinalOpinion())
-                .academicEventsResume(student.getPerformanceReports().getFirst().getAcademicEventsResume())
-                .researchResume(student.getPerformanceReports().getFirst().getResearchResume())
-                .studentObservation(student.getPerformanceReports().getFirst().getStudentObservation())
+                .professorOpinion(performanceReports.get(0).getProfessorOpinion())
+                .professorFinalOpinion(performanceReports.get(0).getProfessorFinalOpinion())
+                .ccpOpinion(performanceReports.get(0).getCcpOpinion())
+                .ccpFinalOpinion(performanceReports.get(0).getCcpFinalOpinion())
+                .academicEventsResume(performanceReports.get(0).getAcademicEventsResume())
+                .researchResume(performanceReports.get(0).getResearchResume())
+                .studentObservation(performanceReports.get(0).getStudentObservation())
                 .qualificationExamDate(student.getExam().getQualificationExamDate())
                 .qualificationExamDeadline(student.getExam().getQualificationExamDeadline())
                 .languageProficiencyExamDate(student.getExam().getLanguageProficiencyExamDate())
@@ -86,21 +99,23 @@ public class PerformanceReportService {
                 .reviewingArticles(student.getArticle().getReviewingArticles())
                 .writingArticles(student.getArticle().getWritingArticles())
                 .build();
-
-        if (student.getPerformanceReports().size() == 1) {
+    
+        // Verificar se o aluno tem apenas um relatório
+        if (performanceReports.size() == 1) {
             return List.of(performanceReportGetResponseDto);
         }
-
+    
+        // Caso o aluno tenha mais de um relatório, retornar uma lista com ambos
         return List.of(
                 performanceReportGetResponseDto,
                 PerformanceReportGetResponseDto.builder()
-                        .professorOpinion(student.getPerformanceReports().get(1).getProfessorOpinion())
-                        .professorFinalOpinion(student.getPerformanceReports().get(1).getProfessorFinalOpinion())
-                        .ccpOpinion(student.getPerformanceReports().get(1).getCcpOpinion())
-                        .ccpFinalOpinion(student.getPerformanceReports().get(1).getCcpFinalOpinion())
-                        .academicEventsResume(student.getPerformanceReports().get(1).getAcademicEventsResume())
-                        .researchResume(student.getPerformanceReports().get(1).getResearchResume())
-                        .studentObservation(student.getPerformanceReports().get(1).getStudentObservation())
+                        .professorOpinion(performanceReports.get(1).getProfessorOpinion())
+                        .professorFinalOpinion(performanceReports.get(1).getProfessorFinalOpinion())
+                        .ccpOpinion(performanceReports.get(1).getCcpOpinion())
+                        .ccpFinalOpinion(performanceReports.get(1).getCcpFinalOpinion())
+                        .academicEventsResume(performanceReports.get(1).getAcademicEventsResume())
+                        .researchResume(performanceReports.get(1).getResearchResume())
+                        .studentObservation(performanceReports.get(1).getStudentObservation())
                         .qualificationExamDate(student.getExam().getQualificationExamDate())
                         .qualificationExamDeadline(student.getExam().getQualificationExamDeadline())
                         .languageProficiencyExamDate(student.getExam().getLanguageProficiencyExamDate())

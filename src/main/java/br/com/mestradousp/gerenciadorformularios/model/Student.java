@@ -1,6 +1,7 @@
 package br.com.mestradousp.gerenciadorformularios.model;
 
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
+import br.com.mestradousp.gerenciadorformularios.enums.Programs;
 import br.com.mestradousp.gerenciadorformularios.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -101,5 +103,41 @@ public class Student implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.loginStatus.toString().equals("APPROVED");
+    }
+
+    public String getName() {
+    return this.studentInformation.getName();
+    }
+
+    public LocalDate getDob() {
+        return this.studentInformation.getDob();
+    }
+
+    public void setDob() {
+        this.studentInformation.setDob(getDob());
+    }
+
+    public String getBirthPlace() {
+        return this.studentInformation.getBirthPlace();
+    }
+
+    public String getNationality() {
+        return this.studentInformation.getNationality();
+    }
+
+    public Programs getProgram() {
+        return this.studentInformation.getProgram();
+    }
+
+    public void setProgram(Programs program) {
+        this.studentInformation.setProgram(program);
+    }
+
+    public String getLattes() {
+        return this.studentInformation.getLattes();
+    }
+
+    public void setLattes(String lattes) {
+        this.studentInformation.setLattes(lattes);
     }
 }
