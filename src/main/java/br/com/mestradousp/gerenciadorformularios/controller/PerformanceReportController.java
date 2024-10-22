@@ -4,6 +4,7 @@ import br.com.mestradousp.gerenciadorformularios.dto.article.ArticleUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.exam.ExamUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportCreateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportGetResponseDto;
+import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import br.com.mestradousp.gerenciadorformularios.exception.BadRequestException;
 import br.com.mestradousp.gerenciadorformularios.model.Article;
@@ -35,6 +36,10 @@ public class PerformanceReportController {
     @PostMapping
     public ResponseEntity<Void> createPerformanceReport(@RequestBody @Valid PerformanceReportCreateDto dto) {
         List<PerformanceReport> performanceReports = performanceReportService.findPerformanceReportByStudentId(dto.studentId());
+
+        if (performanceReports.size() > 2) {
+            throw new ConflictException("It already has 2 Performance Reports");
+        }
 
         Student student = studentService.findStudentById(dto.studentId()).orElseThrow(() -> new NotFoundException("Student not found"));
 
@@ -72,20 +77,11 @@ public class PerformanceReportController {
 
     @GetMapping("/student/{id}")
     public ResponseEntity<List<PerformanceReportGetResponseDto>> getStudentPerformancesReport(
-            @PathVariable Long id, Principal principal) {
-
-        // Obter o e-mail do usuário autenticado
+            @PathVariable Long id,
+            Principal principal
+    ) {
         String authenticatedUserEmail = principal.getName();
 
-        // Verificar se o aluno autenticado corresponde ao aluno do relatório
-        Student student = studentService.findStudentById(id)
-            .orElseThrow(() -> new NotFoundException("Student not found"));
-
-        if (!student.getEmail().equals(authenticatedUserEmail)) {
-            throw new BadRequestException("You are not allowed to view this student's reports");
-        }
-
-        // Buscar relatórios de performance
         return ResponseEntity.ok(this.performanceReportService.findStudentPerformancesReport(id, authenticatedUserEmail));
     }
 }

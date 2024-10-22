@@ -2,15 +2,16 @@ package br.com.mestradousp.gerenciadorformularios.controller;
 
 import br.com.mestradousp.gerenciadorformularios.dto.ccp.CcpCreateOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorRequestCreateDto;
-import br.com.mestradousp.gerenciadorformularios.service.CcpService;
-import br.com.mestradousp.gerenciadorformularios.service.PerformanceReportService;
-import br.com.mestradousp.gerenciadorformularios.service.ProfessorService;
-import br.com.mestradousp.gerenciadorformularios.service.StudentService;
+import br.com.mestradousp.gerenciadorformularios.service.*;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,6 +20,7 @@ public class CcpController {
     private final PerformanceReportService performanceReportService;
     private final ProfessorService professorService;
     private final StudentService studentService;
+    private final EmailService emailService;
 
     @PostMapping("/register/professor")
     public ResponseEntity<Void> createProfessor(@RequestBody @Valid ProfessorRequestCreateDto dto) {

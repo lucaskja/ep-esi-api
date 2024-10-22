@@ -31,10 +31,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/ccp/email").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/performance-report/student/**").hasRole(STUDENT.name())
+                        .requestMatchers(HttpMethod.GET, "/api/student/**").hasRole(STUDENT.name())
+                        .requestMatchers(HttpMethod.PATCH, "/api/ccp/**").hasRole(CCP.name())
+                        .requestMatchers(HttpMethod.PATCH, "/api/student/**").hasRole(STUDENT.name())
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/ccp/**").hasRole(CCP.name())
-                        .requestMatchers(HttpMethod.POST, "api/performance-report/").hasRole(STUDENT.name())
+                        .requestMatchers(HttpMethod.POST, "/api/performance-report").hasRole(STUDENT.name())
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())

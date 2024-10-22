@@ -41,7 +41,6 @@ class StudentServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Configurando as informações do estudante
         StudentInformation studentInformation = new StudentInformation();
         studentInformation.setName("John Doe");
         studentInformation.setProgram(Programs.MASTER);
@@ -51,47 +50,39 @@ class StudentServiceTest {
         studentInformation.setLattes("http://lattes.cnpq.br/123456789");
         studentInformation.setStatus(StudentStatus.ENROLLED);
 
-        // Configurando o professor
         Professor professor = new Professor();
         professor.setName("Dr. Smith");
 
-        // Configurando o exame
         Exam exam = new Exam();
         exam.setQualificationExamDate(LocalDate.of(2023, 6, 15)); 
         exam.setLanguageProficiencyExamDate(LocalDate.of(2023, 3, 10));
 
-        // Configurando o estudante
         Student student = new Student();
         student.setStudentInformation(studentInformation);
         student.setEmail("email@exemplo.com");
         student.setProfessor(professor);
         student.setExam(exam);
 
-        // Simulando o retorno do repositório para o teste
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
 
-        // Simulando o retorno dos cursos aprovados e reprovados
         when(studentCourseService.getApprovedCourses(anyLong())).thenReturn(List.of("Course 1", "Course 2"));
         when(studentCourseService.getFailedCourses(anyLong())).thenReturn(List.of("Course 3"));
     }
 
     @Test
     public void testGetStudentProfile_Success() {
-        // Testa o método getStudentProfile
-        StudentProfileDto result = studentService.getStudentProfile(1L, "email@exemplo.com");
+        StudentProfileDto result = studentService.getStudentProfile(1L);
 
         assertNotNull(result);
-        assertEquals("John Doe", result.getName());
+        assertEquals("John Doe", result.name());
     }
 
     @Test
     void testGetStudentProfile_NotFound() {
-        // Configura o mock para retornar vazio (simulando não encontrado)
         when(studentRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        // Verifica se a exceção NotFoundException é lançada
         assertThrows(NotFoundException.class, () -> {
-            studentService.getStudentProfile(1L, "test@student.com");
+            studentService.getStudentProfile(1L);
         });
     }
 }

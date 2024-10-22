@@ -16,6 +16,7 @@ import br.com.mestradousp.gerenciadorformularios.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,6 +70,34 @@ public class StudentService {
         return this.studentRepository.findById(id);
     }
 
+    public List<Student> getStudentWithPerformanceReport() {
+        return this.studentRepository.findStudentsWithZeroPerformanceReport();
+    }
+
+    public StudentProfileDto getStudentProfile(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new NotFoundException("Student not found"));
+
+        return StudentProfileDto.builder()
+                .studentId(student.getId())
+                .uspNumber(student.getUspNumber())
+                .name(student.getStudentInformation().getName())
+                .email(student.getEmail())
+                .dob(student.getStudentInformation().getDob())
+                .birthPlace(student.getStudentInformation().getBirthPlace())
+                .nationality(student.getStudentInformation().getNationality())
+                .course(student.getStudentInformation().getProgram().toString())
+                .professor(student.getProfessor().getName())
+                .lattes(student.getStudentInformation().getLattes())
+                .enrollmentDate(student.getStudentInformation().getCreatedAt())
+                .qualificationExamApprovalDate(student.getExam().getQualificationExamDate())
+                .languageProficiencyApprovalDate(student.getExam().getLanguageProficiencyExamDate())
+                .finalWorkDepositDeadline(student.getExam().getAssigmentDeadline())
+                .approvedCourses(studentCourseService.getApprovedCourses(studentId))
+                .failedCourses(studentCourseService.getFailedCourses(studentId))
+                .build();
+    }
+
     public void approveStudent(Long id) {
         Student student = this.studentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
@@ -82,45 +111,14 @@ public class StudentService {
         this.studentRepository.save(student);
     }
 
-    // Método para buscar o perfil do aluno pelo ID
-    public StudentProfileDto getStudentProfile(Long studentId, String authenticatedEmail) {
+    public void updateLattesLink(
+            Long studentId,
+            UpdateLattesLinkDto updateLattesLinkDto
+    ) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
 
-        if (!student.getEmail().equals(authenticatedEmail)) {
-            throw new ConflictException("You are not allowed to view this student's profile");
-        }
-
-        return StudentProfileDto.builder()
-                .studentId(student.getId())
-                .uspNumber(student.getUspNumber())
-                .name(student.getName()) // Pega o nome do StudentInformation
-                .email(student.getEmail())
-                .dob(student.getDob()) // Data de nascimento do StudentInformation
-                .birthPlace(student.getBirthPlace()) // Local de nascimento do StudentInformation
-                .nationality(student.getNationality()) // Nacionalidade do StudentInformation
-                .course(student.getProgram().toString()) // Programa (mestrado/doutorado) do StudentInformation
-                .professor(student.getProfessor().getName()) // Nome do orientador
-                .lattes(student.getLattes()) // Link para o Lattes do StudentInformation
-                .enrollmentDate(student.getStudentInformation().getCreatedAt()) // Data de matrícula (createdAt da StudentInformation)
-                .qualificationExamApprovalDate(student.getExam().getQualificationExamDate()) // Data de aprovação no exame de qualificação
-                .languageProficiencyApprovalDate(student.getExam().getLanguageProficiencyExamDate()) // Data de aprovação no exame de proficiência
-                .finalWorkDepositDeadline(student.getExam().getAssigmentDeadline()) // Data limite para depósito do trabalho final
-                .approvedCourses(studentCourseService.getApprovedCourses(studentId)) // Lista de disciplinas aprovadas
-                .failedCourses(studentCourseService.getFailedCourses(studentId)) // Lista de disciplinas reprovadas
-                .build();
-    }
-
-    // Método para atualizar o link do Lattes
-    public void updateLattesLink(Long studentId, UpdateLattesLinkDto updateLattesLinkDto, String authenticatedEmail) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new NotFoundException("Student not found"));
-
-        if (!student.getEmail().equals(authenticatedEmail)) {
-            throw new ConflictException("You are not allowed to edit this student's profile");
-        }
-
-        student.setLattes(updateLattesLinkDto.getLattesLink());
+        student.getStudentInformation().setLattes(updateLattesLinkDto.lattesLink());
         studentRepository.save(student);
     }
 }

@@ -104,40 +104,4 @@ public class Student implements UserDetails {
     public boolean isEnabled() {
         return this.loginStatus.toString().equals("APPROVED");
     }
-
-    public String getName() {
-    return this.studentInformation.getName();
-    }
-
-    public LocalDate getDob() {
-        return this.studentInformation.getDob();
-    }
-
-    public void setDob() {
-        this.studentInformation.setDob(getDob());
-    }
-
-    public String getBirthPlace() {
-        return this.studentInformation.getBirthPlace();
-    }
-
-    public String getNationality() {
-        return this.studentInformation.getNationality();
-    }
-
-    public Programs getProgram() {
-        return this.studentInformation.getProgram();
-    }
-
-    public void setProgram(Programs program) {
-        this.studentInformation.setProgram(program);
-    }
-
-    public String getLattes() {
-        return this.studentInformation.getLattes();
-    }
-
-    public void setLattes(String lattes) {
-        this.studentInformation.setLattes(lattes);
-    }
 }

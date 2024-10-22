@@ -22,7 +22,7 @@ public class JwtTokenService {
     private String privateKey;
 
     private static final String ISSUER = "auth";
-    private static final Integer EXPIRATION_TIME_IN_MINUTES = 5;
+    private static final Integer EXPIRATION_TIME_IN_MINUTES = 30;
 
     public LoginResponseDto generateToken(UserDetails user) {
         Algorithm algorithm = Algorithm.HMAC256(privateKey);

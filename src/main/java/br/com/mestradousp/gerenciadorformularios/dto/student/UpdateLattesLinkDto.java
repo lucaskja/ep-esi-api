@@ -1,8 +1,10 @@
 package br.com.mestradousp.gerenciadorformularios.dto.student;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-public class UpdateLattesLinkDto {
-    private String lattesLink;
+
+public record UpdateLattesLinkDto(
+        @NotBlank
+        String lattesLink
+) {
 }
