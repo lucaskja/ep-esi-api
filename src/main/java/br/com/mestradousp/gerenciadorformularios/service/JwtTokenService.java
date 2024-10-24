@@ -2,6 +2,7 @@ package br.com.mestradousp.gerenciadorformularios.service;
 
 
 import br.com.mestradousp.gerenciadorformularios.dto.login.LoginResponseDto;
+import br.com.mestradousp.gerenciadorformularios.enums.Roles;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.Role;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -24,7 +26,7 @@ public class JwtTokenService {
     private static final String ISSUER = "auth";
     private static final Integer EXPIRATION_TIME_IN_MINUTES = 30;
 
-    public LoginResponseDto generateToken(UserDetails user, Long id) {
+    public LoginResponseDto generateToken(UserDetails user, Long id, Roles role) {
         Algorithm algorithm = Algorithm.HMAC256(privateKey);
 
         String token = JWT.create()
@@ -33,7 +35,7 @@ public class JwtTokenService {
                 .withExpiresAt(this.getExpirationDate())
                 .sign(algorithm);
 
-        return new LoginResponseDto(id, token, EXPIRATION_TIME_IN_MINUTES);
+        return new LoginResponseDto(id, role, token, EXPIRATION_TIME_IN_MINUTES);
     }
 
     public String validateToken(String token) {

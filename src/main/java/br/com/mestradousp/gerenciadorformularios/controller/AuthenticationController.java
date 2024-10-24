@@ -55,13 +55,25 @@ public class AuthenticationController {
         Professor professor = professorService.findByEmail(email).orElse(null);
 
         if (student != null ) {
-            return tokenService.generateToken((Student) auth.getPrincipal(), ((Student) auth.getPrincipal()).getId());
+            return tokenService.generateToken(
+                    (Student) auth.getPrincipal(),
+                    ((Student) auth.getPrincipal()).getId(),
+                    ((Student) auth.getPrincipal()).getRole()
+            );
         }
 
         if (professor != null) {
-            return tokenService.generateToken((Professor) auth.getPrincipal(), ((Professor) auth.getPrincipal()).getId());
+            return tokenService.generateToken(
+                    (Professor) auth.getPrincipal(),
+                    ((Professor) auth.getPrincipal()).getId(),
+                    ((Professor) auth.getPrincipal()).getRole()
+            );
         }
 
-        return tokenService.generateToken((Ccp) auth.getPrincipal(), ((Ccp) auth.getPrincipal()).getId());
+        return tokenService.generateToken(
+                (Ccp) auth.getPrincipal(),
+                ((Ccp) auth.getPrincipal()).getId(),
+                ((Ccp) auth.getPrincipal()).getRole()
+        );
     }
 }
