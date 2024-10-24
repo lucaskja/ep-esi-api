@@ -24,7 +24,7 @@ public class JwtTokenService {
     private static final String ISSUER = "auth";
     private static final Integer EXPIRATION_TIME_IN_MINUTES = 30;
 
-    public LoginResponseDto generateToken(UserDetails user) {
+    public LoginResponseDto generateToken(UserDetails user, Long id) {
         Algorithm algorithm = Algorithm.HMAC256(privateKey);
 
         String token = JWT.create()
@@ -33,7 +33,7 @@ public class JwtTokenService {
                 .withExpiresAt(this.getExpirationDate())
                 .sign(algorithm);
 
-        return new LoginResponseDto(token, EXPIRATION_TIME_IN_MINUTES);
+        return new LoginResponseDto(id, token, EXPIRATION_TIME_IN_MINUTES);
     }
 
     public String validateToken(String token) {

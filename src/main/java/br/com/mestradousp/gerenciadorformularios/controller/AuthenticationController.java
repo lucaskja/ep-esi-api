@@ -4,15 +4,12 @@ import br.com.mestradousp.gerenciadorformularios.dto.login.LoginRequestDto;
 import br.com.mestradousp.gerenciadorformularios.dto.login.LoginResponseDto;
 import br.com.mestradousp.gerenciadorformularios.dto.login.RegisterRequestDto;
 import br.com.mestradousp.gerenciadorformularios.exception.BadRequestException;
-import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import br.com.mestradousp.gerenciadorformularios.model.Ccp;
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.model.Student;
-import br.com.mestradousp.gerenciadorformularios.service.CcpService;
 import br.com.mestradousp.gerenciadorformularios.service.JwtTokenService;
 import br.com.mestradousp.gerenciadorformularios.service.ProfessorService;
 import br.com.mestradousp.gerenciadorformularios.service.StudentService;
-import br.com.mestradousp.gerenciadorformularios.util.PasswordEncoder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -59,13 +55,13 @@ public class AuthenticationController {
         Professor professor = professorService.findByEmail(email).orElse(null);
 
         if (student != null ) {
-            return tokenService.generateToken((Student) auth.getPrincipal());
+            return tokenService.generateToken((Student) auth.getPrincipal(), ((Student) auth.getPrincipal()).getId());
         }
 
         if (professor != null) {
-            return tokenService.generateToken((Professor) auth.getPrincipal());
+            return tokenService.generateToken((Professor) auth.getPrincipal(), ((Professor) auth.getPrincipal()).getId());
         }
 
-        return tokenService.generateToken((Ccp) auth.getPrincipal());
+        return tokenService.generateToken((Ccp) auth.getPrincipal(), ((Ccp) auth.getPrincipal()).getId());
     }
 }
