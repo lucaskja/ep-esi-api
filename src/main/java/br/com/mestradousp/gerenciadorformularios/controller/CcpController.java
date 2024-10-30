@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/ccp")
+@RequestMapping("ccp")
 public class CcpController {
     private final PerformanceReportService performanceReportService;
     private final ProfessorService professorService;

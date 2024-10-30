@@ -26,7 +26,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/performance-report")
+@RequestMapping("performance-report")
 public class PerformanceReportController {
     private final PerformanceReportService performanceReportService;
     private final ExamService examService;
