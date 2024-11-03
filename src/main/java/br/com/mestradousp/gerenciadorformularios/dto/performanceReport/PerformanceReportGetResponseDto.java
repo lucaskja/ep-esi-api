@@ -38,6 +38,9 @@ public record PerformanceReportGetResponseDto(
         @JsonFormat(pattern = "dd/MM/yyyy")
         LocalDate assigmentDeadline,
 
+        @JsonFormat(pattern = "dd/MM/yyyy")
+        LocalDate createdAt,
+
         @Min(0)
         Integer writingArticles,
 

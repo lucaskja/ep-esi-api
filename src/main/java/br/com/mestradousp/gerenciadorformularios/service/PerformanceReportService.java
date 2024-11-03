@@ -66,11 +66,9 @@ public class PerformanceReportService {
     }
 
     public List<PerformanceReportGetResponseDto> findStudentPerformancesReport(Long Id, String authenticatedEmail) {
-        // Verificar se o aluno existe
         Student student = this.studentService.findStudentById(Id)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
-    
-        // Verificar se o e-mail do aluno autenticado é o mesmo do aluno solicitado
+
         if (!student.getEmail().equals(authenticatedEmail)) {
             throw new ConflictException("You are not allowed to view this student's reports");
         }
@@ -80,8 +78,7 @@ public class PerformanceReportService {
         if (performanceReports.isEmpty()) {
             throw new NotFoundException("No performance reports found for this student");
         }
-    
-        // Construir o primeiro relatório de performance para o DTO
+
         PerformanceReportGetResponseDto performanceReportGetResponseDto = PerformanceReportGetResponseDto.builder()
                 .professorOpinion(performanceReports.get(0).getProfessorOpinion())
                 .professorFinalOpinion(performanceReports.get(0).getProfessorFinalOpinion())
@@ -98,14 +95,13 @@ public class PerformanceReportService {
                 .approvedArticles(student.getArticle().getApprovedArticles())
                 .reviewingArticles(student.getArticle().getReviewingArticles())
                 .writingArticles(student.getArticle().getWritingArticles())
+                .createdAt(performanceReports.get(0).getCreatedAt())
                 .build();
-    
-        // Verificar se o aluno tem apenas um relatório
+
         if (performanceReports.size() == 1) {
             return List.of(performanceReportGetResponseDto);
         }
-    
-        // Caso o aluno tenha mais de um relatório, retornar uma lista com ambos
+
         return List.of(
                 performanceReportGetResponseDto,
                 PerformanceReportGetResponseDto.builder()
@@ -124,6 +120,7 @@ public class PerformanceReportService {
                         .approvedArticles(student.getArticle().getApprovedArticles())
                         .reviewingArticles(student.getArticle().getReviewingArticles())
                         .writingArticles(student.getArticle().getWritingArticles())
+                        .createdAt(performanceReports.get(1).getCreatedAt())
                         .build()
         );
     }

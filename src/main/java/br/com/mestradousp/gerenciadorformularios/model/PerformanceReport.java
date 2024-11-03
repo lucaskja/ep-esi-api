@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -38,6 +41,9 @@ public class PerformanceReport {
 
     @Enumerated(EnumType.STRING)
     private Opinions ccpFinalOpinion;
+
+    @CreationTimestamp
+    private LocalDate createdAt;
 
     @JsonIgnoreProperties("performanceReports")
     @ManyToOne

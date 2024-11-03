@@ -21,9 +21,6 @@ public record PerformanceReportCreateDto(
     @NotBlank
     String studentObservation,
 
-    @NotNull
-    Boolean hasDifficult,
-
     @JsonFormat(pattern = "dd/MM/yyyy")
     LocalDate qualificationExamDate,
 
