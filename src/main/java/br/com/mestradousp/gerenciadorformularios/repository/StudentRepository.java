@@ -14,5 +14,8 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT s FROM Student s LEFT JOIN s.studentInformation si WHERE si.status = 'ENROLLED'")
     List<Student> findStudentsWithZeroPerformanceReport();
+
+    @Query("SELECT s FROM Student s LEFT JOIN s.studentInformation si LEFT JOIN s.performanceReports WHERE si.status = 'ENROLLED'")
+    List<Student> findByProfessorId(Long professorId);
     Optional<Student> findByEmail(String email);
 }

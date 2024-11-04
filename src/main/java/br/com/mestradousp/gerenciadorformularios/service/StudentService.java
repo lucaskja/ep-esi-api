@@ -1,6 +1,7 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
 import br.com.mestradousp.gerenciadorformularios.dto.login.RegisterRequestDto;
+import br.com.mestradousp.gerenciadorformularios.dto.professor.GetStudentsDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentProfileDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.UpdateLattesLinkDto;
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
@@ -96,6 +97,18 @@ public class StudentService {
                 .approvedCourses(studentCourseService.getApprovedCourses(studentId))
                 .failedCourses(studentCourseService.getFailedCourses(studentId))
                 .build();
+    }
+
+    public List<GetStudentsDto> getStudentsByProfessorId(Long professorId) {
+        return this.studentRepository.findByProfessorId(professorId).stream().
+                map(student ->
+                    GetStudentsDto.builder()
+                            .uspNumber(student.getUspNumber())
+                            .studentName(student.getStudentInformation().getName())
+                            .reports(student.getPerformanceReports())
+                            .build()
+                )
+                .toList();
     }
 
     public void approveStudent(Long id) {
