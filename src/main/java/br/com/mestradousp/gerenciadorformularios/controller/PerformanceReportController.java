@@ -1,9 +1,11 @@
 package br.com.mestradousp.gerenciadorformularios.controller;
 
 import br.com.mestradousp.gerenciadorformularios.dto.article.ArticleUpdateDto;
+import br.com.mestradousp.gerenciadorformularios.dto.ccp.CcpCreateOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.dto.exam.ExamUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportCreateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportGetResponseDto;
+import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportProfessorOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import br.com.mestradousp.gerenciadorformularios.exception.BadRequestException;
@@ -71,6 +73,26 @@ public class PerformanceReportController {
         student.getArticle().setWritingArticles(dto.writingArticles());
 
         this.articleService.updateArticle(student.getArticle());
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/professor/opinion/{id}")
+    public ResponseEntity<Void> createProfessorOpinion(
+            @PathVariable Long id,
+            @Valid @RequestBody PerformanceReportProfessorOpinionDto dto
+    ) {
+        this.performanceReportService.createProfessorOpinion(id, dto);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/ccp/opinion/{id}")
+    public ResponseEntity<Void> createCppOpinion(
+            @PathVariable Long id,
+            @Valid @RequestBody CcpCreateOpinionDto dto
+    ) {
+        this.performanceReportService.createCcpOpinion(id, dto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

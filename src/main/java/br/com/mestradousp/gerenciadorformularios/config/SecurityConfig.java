@@ -24,8 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static br.com.mestradousp.gerenciadorformularios.enums.Roles.CCP;
-import static br.com.mestradousp.gerenciadorformularios.enums.Roles.STUDENT;
+import static br.com.mestradousp.gerenciadorformularios.enums.Roles.*;
 
 @Configuration
 @EnableWebSecurity
@@ -46,6 +45,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/ccp/**").hasRole(CCP.name())
                         .requestMatchers(HttpMethod.POST, "/performance-report").hasRole(STUDENT.name())
+                        .requestMatchers(HttpMethod.POST, "/performance-report/professor/**").hasRole(PROFESSOR.name())
+                        .requestMatchers(HttpMethod.POST, "/performance-report/ccp/**").hasRole(CCP.name())
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())

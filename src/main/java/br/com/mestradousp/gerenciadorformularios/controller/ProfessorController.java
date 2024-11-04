@@ -17,18 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("professor")
 public class ProfessorController {
-    private final PerformanceReportService performanceReportService;
     private final StudentService studentService;
-
-    @PostMapping("/performance-report/opinion/{id}")
-    public ResponseEntity<Void> createProfessorOpinion(
-            @PathVariable Long id,
-            @Valid @RequestBody PerformanceReportProfessorOpinionDto dto
-    ) {
-        this.performanceReportService.createProfessorOpinion(id, dto);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
     @GetMapping("/{id}/students")
     public ResponseEntity<List<GetStudentsDto>> getAllProfessorStudents(@PathVariable Long id) {

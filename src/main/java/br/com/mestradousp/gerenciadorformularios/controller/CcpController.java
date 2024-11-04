@@ -17,10 +17,8 @@ import java.io.UnsupportedEncodingException;
 @RestController
 @RequestMapping("ccp")
 public class CcpController {
-    private final PerformanceReportService performanceReportService;
     private final ProfessorService professorService;
     private final StudentService studentService;
-    private final EmailService emailService;
 
     @PostMapping("/register/professor")
     public ResponseEntity<Void> createProfessor(@RequestBody @Valid ProfessorRequestCreateDto dto) {
@@ -29,17 +27,7 @@ public class CcpController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/opinion/{id}")
-    public ResponseEntity<Void> createCppOpinion(
-            @PathVariable Long id,
-            @Valid @RequestBody CcpCreateOpinionDto dto
-    ) {
-        this.performanceReportService.createCcpOpinion(id, dto);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @PatchMapping("/student/{id}/approve")
+    @PatchMapping("/register/approve/student/{id}")
     public ResponseEntity<Void> approveStudent(@PathVariable Long id) {
         this.studentService.approveStudent(id);
 
