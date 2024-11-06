@@ -1,4 +1,4 @@
-package br.com.mestradousp.gerenciadorformularios.dto.professor;
+package br.com.mestradousp.gerenciadorformularios.dto.student;
 
 import br.com.mestradousp.gerenciadorformularios.model.PerformanceReport;
 import lombok.Builder;
@@ -6,7 +6,8 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record GetStudentsDto(
+public record GetStudentDto(
+        Long studentId,
         String uspNumber,
         String studentName,
         List<PerformanceReport> reports

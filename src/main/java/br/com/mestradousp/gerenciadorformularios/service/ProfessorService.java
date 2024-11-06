@@ -1,5 +1,6 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
+import br.com.mestradousp.gerenciadorformularios.dto.professor.GetProfessorDto;
 import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorRequestCreateDto;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.model.Professor;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -37,5 +39,15 @@ public class ProfessorService {
                         .role(dto.role())
                         .build()
         );
+    }
+
+    public List<GetProfessorDto> getAllProfessors() {
+        return this.professorRepository.findAll().stream()
+                .map(professor -> GetProfessorDto.builder()
+                        .professorId(professor.getId())
+                        .professorName(professor.getName())
+                        .build()
+                )
+                .toList();
     }
 }

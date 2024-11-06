@@ -1,7 +1,8 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
 import br.com.mestradousp.gerenciadorformularios.dto.login.RegisterRequestDto;
-import br.com.mestradousp.gerenciadorformularios.dto.professor.GetStudentsDto;
+import br.com.mestradousp.gerenciadorformularios.dto.professor.GetProfessorDto;
+import br.com.mestradousp.gerenciadorformularios.dto.student.GetStudentDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentProfileDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.UpdateLattesLinkDto;
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
@@ -75,6 +76,20 @@ public class StudentService {
         return this.studentRepository.findStudentsWithZeroPerformanceReport();
     }
 
+    public List<GetStudentDto> getAllStudents() {
+        return this.studentRepository.findAll().stream()
+                .map(student -> (
+                    GetStudentDto.builder()
+                            .studentName(student.getStudentInformation().getName())
+                            .studentId(student.getId())
+                            .uspNumber(student.getUspNumber())
+                            .reports(student.getPerformanceReports())
+                            .build()
+                    )
+                )
+                .toList();
+    }
+
     public StudentProfileDto getStudentProfile(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
@@ -99,16 +114,28 @@ public class StudentService {
                 .build();
     }
 
-    public List<GetStudentsDto> getStudentsByProfessorId(Long professorId) {
+    public List<GetStudentDto> getStudentsByProfessorId(Long professorId) {
         return this.studentRepository.findByProfessorId(professorId).stream().
                 map(student ->
-                    GetStudentsDto.builder()
+                    GetStudentDto.builder()
+                            .studentId(student.getId())
                             .uspNumber(student.getUspNumber())
                             .studentName(student.getStudentInformation().getName())
                             .reports(student.getPerformanceReports())
                             .build()
                 )
                 .toList();
+    }
+
+    public GetStudentDto getStudentByProfessorIdAndStudentId(Long professorId, Long studentId) {
+        Student student = this.studentRepository.findByProfessorIdAndStudentId(professorId, studentId);
+
+        return GetStudentDto.builder()
+                .studentId(student.getId())
+                .uspNumber(student.getUspNumber())
+                .studentName(student.getStudentInformation().getName())
+                .reports(student.getPerformanceReports())
+                .build();
     }
 
     public void approveStudent(Long id) {

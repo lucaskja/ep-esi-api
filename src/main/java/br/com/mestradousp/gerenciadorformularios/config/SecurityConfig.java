@@ -39,7 +39,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/ccp/email").permitAll()
                         .requestMatchers(HttpMethod.GET, "/performance-report/student/**").hasRole(STUDENT.name())
-                        .requestMatchers(HttpMethod.GET, "/student/**").hasRole(STUDENT.name())
                         .requestMatchers(HttpMethod.PATCH, "/ccp/**").hasRole(CCP.name())
                         .requestMatchers(HttpMethod.PATCH, "/student/**").hasRole(STUDENT.name())
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
