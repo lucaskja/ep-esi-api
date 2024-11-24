@@ -1,7 +1,6 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
 import br.com.mestradousp.gerenciadorformularios.dto.login.RegisterRequestDto;
-import br.com.mestradousp.gerenciadorformularios.dto.professor.GetProfessorDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.GetStudentDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.StudentProfileDto;
 import br.com.mestradousp.gerenciadorformularios.dto.student.UpdateLattesLinkDto;

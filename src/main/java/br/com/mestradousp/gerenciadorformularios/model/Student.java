@@ -1,7 +1,6 @@
 package br.com.mestradousp.gerenciadorformularios.model;
 
 import br.com.mestradousp.gerenciadorformularios.enums.LoginStatus;
-import br.com.mestradousp.gerenciadorformularios.enums.Programs;
 import br.com.mestradousp.gerenciadorformularios.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.time.LocalDate;
 
 @Getter
 @Setter

@@ -25,4 +25,10 @@ public class EvaluationFormController {
 
         return ResponseEntity.ok("Formulário de avaliação submetido com sucesso");
     }
+
+    @GetMapping("/status/{formId}")
+    public ResponseEntity<?> getEvaluationStatus(@PathVariable Long formId, @RequestParam Long studentId) {
+        String statusDescription = evaluationFormService.getEvaluationStatus(formId, studentId);
+        return ResponseEntity.ok(statusDescription);
+    }
 }

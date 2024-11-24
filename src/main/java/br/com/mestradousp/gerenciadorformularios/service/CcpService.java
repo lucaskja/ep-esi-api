@@ -1,11 +1,8 @@
 package br.com.mestradousp.gerenciadorformularios.service;
 
-import br.com.mestradousp.gerenciadorformularios.dto.ccp.CcpCreateOpinionDto;
-import br.com.mestradousp.gerenciadorformularios.dto.professor.ProfessorRequestCreateDto;
 import br.com.mestradousp.gerenciadorformularios.model.Ccp;
 import br.com.mestradousp.gerenciadorformularios.repository.CcpRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

@@ -43,7 +43,7 @@ public class CcpEvaluationService {
             .build();
 
         ccpEvaluationRepository.save(evaluation);
-        form.setStatus(EvaluationStatus.APPROVED);
+        form.setStatus(EvaluationStatus.APPROVED_BY_CCP);
         evaluationFormRepository.save(form);
     }
 }
