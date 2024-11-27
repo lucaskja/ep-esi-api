@@ -1,14 +1,11 @@
 package br.com.mestradousp.gerenciadorformularios.controller;
 
-import br.com.mestradousp.gerenciadorformularios.dto.article.ArticleUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.ccp.CcpCreateOpinionDto;
-import br.com.mestradousp.gerenciadorformularios.dto.exam.ExamUpdateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportCreateDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportGetResponseDto;
 import br.com.mestradousp.gerenciadorformularios.dto.performanceReport.PerformanceReportProfessorOpinionDto;
 import br.com.mestradousp.gerenciadorformularios.exception.ConflictException;
 import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
-import br.com.mestradousp.gerenciadorformularios.exception.BadRequestException;
 import br.com.mestradousp.gerenciadorformularios.model.Article;
 import br.com.mestradousp.gerenciadorformularios.model.Exam;
 import br.com.mestradousp.gerenciadorformularios.model.PerformanceReport;

@@ -3,16 +3,13 @@ package br.com.mestradousp.gerenciadorformularios.service;
 
 import br.com.mestradousp.gerenciadorformularios.dto.login.LoginResponseDto;
 import br.com.mestradousp.gerenciadorformularios.enums.Roles;
-import br.com.mestradousp.gerenciadorformularios.exception.NotFoundException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

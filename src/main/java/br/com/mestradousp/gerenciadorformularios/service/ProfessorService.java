@@ -7,7 +7,6 @@ import br.com.mestradousp.gerenciadorformularios.model.Professor;
 import br.com.mestradousp.gerenciadorformularios.repository.ProfessorRepository;
 import br.com.mestradousp.gerenciadorformularios.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -3,7 +3,6 @@ package br.com.mestradousp.gerenciadorformularios.model;
 import br.com.mestradousp.gerenciadorformularios.enums.Opinions;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
