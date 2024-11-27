@@ -21,5 +21,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT s FROM Student s LEFT JOIN s.studentInformation si LEFT JOIN s.performanceReports pr WHERE si.status = 'ENROLLED' AND s.id = :studentId AND s.professor.id = :professorId")
     Student findByProfessorIdAndStudentId(@Param("professorId") Long professorId, @Param("studentId") Long studentId);
 
+    @Query("SELECT s FROM Student s LEFT JOIN s.studentInformation si LEFT JOIN s.performanceReports pr WHERE s.loginStatus = 'PENDENT'")
+    List<Student> findStudentsWithPendentStatus();
+
     Optional<Student> findByEmail(String email);
+
+    @Query("SELECT s FROM Student s LEFT JOIN s.studentInformation si LEFT JOIN s.performanceReports pr WHERE s.loginStatus != 'PENDENT'")
+    List<Student> findAllStudentWithoutPendentStatus();
+
 }

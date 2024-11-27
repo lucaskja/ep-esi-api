@@ -77,7 +77,7 @@ public class StudentService {
     }
 
     public List<GetStudentDto> getAllStudents() {
-        return this.studentRepository.findAll().stream()
+        return this.studentRepository.findAllStudentWithoutPendentStatus().stream()
                 .map(student -> (
                     GetStudentDto.builder()
                             .studentName(student.getStudentInformation().getName())
@@ -88,6 +88,10 @@ public class StudentService {
                     )
                 )
                 .toList();
+    }
+
+    public List<Student> getStudentsWithPendentStatus() {
+        return this.studentRepository.findStudentsWithPendentStatus();
     }
 
     public StudentProfileDto getStudentProfile(Long studentId) {

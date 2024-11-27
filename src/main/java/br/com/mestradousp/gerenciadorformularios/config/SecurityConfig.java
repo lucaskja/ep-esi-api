@@ -37,6 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/professor/all").permitAll()
                         .requestMatchers(HttpMethod.GET, "/ccp/email").permitAll()
                         .requestMatchers(HttpMethod.GET, "/performance-report/student/**").hasRole(STUDENT.name())
                         .requestMatchers(HttpMethod.PATCH, "/ccp/**").hasRole(CCP.name())
