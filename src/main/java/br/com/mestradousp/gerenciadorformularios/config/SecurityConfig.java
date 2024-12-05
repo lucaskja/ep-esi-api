@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/ccp/**").hasRole(CCP.name())
                         .requestMatchers(HttpMethod.PATCH, "/student/**").hasRole(STUDENT.name())
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/ccp/**").hasRole(CCP.name())
                         .requestMatchers(HttpMethod.POST, "/performance-report").hasRole(STUDENT.name())
                         .requestMatchers(HttpMethod.POST, "/performance-report/professor/**").hasRole(PROFESSOR.name())

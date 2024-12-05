@@ -10,6 +10,7 @@ import br.com.mestradousp.gerenciadorformularios.model.Student;
 import br.com.mestradousp.gerenciadorformularios.service.JwtTokenService;
 import br.com.mestradousp.gerenciadorformularios.service.ProfessorService;
 import br.com.mestradousp.gerenciadorformularios.service.StudentService;
+import br.com.mestradousp.gerenciadorformularios.util.PasswordEncoder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,7 +31,16 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto dto) {
+
+
         return ResponseEntity.ok(this.generateToken(dto));
+    }
+
+    @GetMapping("/crypto")
+    public ResponseEntity<String> cryto() {
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+
+        return ResponseEntity.ok(passwordEncoder.encode("abcd12345"));
     }
 
     @PostMapping("/register")
