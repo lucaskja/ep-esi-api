@@ -70,31 +70,31 @@ public class StudentTest {
 
     @Test
     public void testIsAccountEnabled() {
-        // Verificando se o método isEnabled retorna true quando o loginStatus é "APPROVED"
+        // Verificando se o isEnabled retorna true quando o loginStatus é "APPROVED"
         assertTrue(student.isEnabled());
     }
 
     @Test
     public void testIsAccountNonExpired() {
-        // Verificando se o método isAccountNonExpired retorna true
+        // Verificando se o isAccountNonExpired retorna true
         assertTrue(student.isAccountNonExpired());
     }
 
     @Test
     public void testIsAccountNonLocked() {
-        // Verificando se o método isAccountNonLocked retorna true
+        // Verificando se o isAccountNonLocked retorna true
         assertTrue(student.isAccountNonLocked());
     }
 
     @Test
     public void testIsCredentialsNonExpired() {
-        // Verificando se o método isCredentialsNonExpired retorna true
+        // Verificando se isCredentialsNonExpired retorna true
         assertTrue(student.isCredentialsNonExpired());
     }
 
     @Test
     public void testGetAuthorities() {
-        // Verificando se o método getAuthorities retorna o papel correto
+        // Verificando se getAuthorities retorna o papel correto
         List<String> authorities = student.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
